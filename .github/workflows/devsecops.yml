@@ -1,0 +1,55 @@
+name: DevSecOps Security Pipeline
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  sast:
+    name: "Gate 1: SAST (Semgrep)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Semgrep
+        run: |
+          pip install semgrep
+          semgrep --config=auto routes/ server.ts --error
+
+  dependency-scan:
+    name: "Gate 2: Dependency Scan (npm audit)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run npm audit
+        run: npm audit --audit-level=critical
+
+  secrets-scan:
+    name: "Gate 3: Secrets Scan (Gitleaks)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  container-scan:
+    name: "Gate 4: Container Scan (Trivy)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t juice-shop-scan .
+      - name: Run Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'juice-shop-scan'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
