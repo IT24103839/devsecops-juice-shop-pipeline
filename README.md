@@ -7,10 +7,10 @@ Faculty of Computing, SLIIT | BSc (Hons) in Information Technology | Year 3 Seme
 
 | Student ID | Name | Role |
 |---|---|---|
-| IT24103839 | (your name) | Lead / all sections |
-| | (member 2) | |
-| | (member 3) | |
-| | (member 4) | |
+| IT24103839 | Ambegoda L. D. S. P. | Vulnerability 1 |
+| IT24103936 | Sewmina G. D. D. | Vulnerability 2 |
+| IT24103718 | Perera K. S. S. | Vulnerability 3 |
+| IT24102509 | Hettiarachchi T. J. | Vulnerability 4 |
 
 ## Project Overview
 
